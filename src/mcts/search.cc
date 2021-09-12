@@ -1579,8 +1579,23 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
   int completed_visits = 0;
 
   bool is_root_node = node == search_->root_node_;
-  const float even_draw_score = search_->GetDrawScore(false);
-  const float odd_draw_score = search_->GetDrawScore(true);
+  
+  float even_draw_score = search_->GetDrawScore(false);
+  float odd_draw_score = search_->GetDrawScore(true);
+  if(!is_root_node){
+    float root_q=search_->root_node_->GetQ(0.0);
+    if(root_q < -0.15){
+      // Aim for draw
+      even_draw_score = 0.75;
+      LOGFILE << "Looking bad, going for a draw" << even_draw_score;
+      }
+    if(root_q < 0.15){
+      // Aim for a win
+      even_draw_score = 0.25;
+      LOGFILE << "Looking good, going for a win" << even_draw_score;      
+    }
+  }
+
   const auto& root_move_filter = search_->root_move_filter_;
   auto m_evaluator = moves_left_support_ ? MEvaluator(params_) : MEvaluator();
 
@@ -1666,6 +1681,7 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
       const float draw_score = ((current_path.size() + base_depth) % 2 == 0)
                                    ? odd_draw_score
                                    : even_draw_score;
+
       m_evaluator.SetParent(node);
       float visited_pol = 0.0f;
       for (Node* child : node->VisitedNodes()) {
