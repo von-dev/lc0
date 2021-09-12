@@ -505,7 +505,7 @@ void Search::SendMovesStats() const REQUIRES(counters_mutex_) {
       // Aim for draw
       LOGFILE << "Looking bad, going for a draw" << root_q;
       }
-    if(root_q < 0.15){
+    if(root_q > 0.15){
       // Aim for a win
       LOGFILE << "Looking good, going for a win" << root_q;
     }
@@ -1600,7 +1600,7 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
       // Aim for draw
       even_draw_score = 0.75;
       }
-    if(root_q < 0.15){
+    if(root_q > 0.15){
       // Aim for a win
       even_draw_score = 0.25;
     }
