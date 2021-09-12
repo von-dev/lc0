@@ -502,15 +502,15 @@ void Search::SendMovesStats() const REQUIRES(counters_mutex_) {
   }
   float root_q=root_node_->GetQ(0.0);
     if(root_q < -0.15){
-      // Aim for draw
-      LOGFILE << "Looking bad, going for a draw" << root_q;
+      // Aim for a win
+      LOGFILE << "Looking good, going for a win: " << root_q;
       }
     if(root_q > 0.15){
-      // Aim for a win
-      LOGFILE << "Looking good, going for a win" << root_q;
+      // Aim for draw
+      LOGFILE << "Looking bad, going for a draw: " << root_q;
     }
     if((root_q >= -0.15) & (root_q <= 0.15)){
-      LOGFILE << "Looking even, not setting draw score dynamically" << root_q;      
+      LOGFILE << "Looking even, not setting draw score dynamically: " << root_q;      
     }
 }
 
@@ -1591,18 +1591,28 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
   int completed_visits = 0;
 
   bool is_root_node = node == search_->root_node_;
+
+  // While testing, use the two draw score parameters in a custom way
+  // float even_draw_score = search_->GetDrawScore(false);
+  // float odd_draw_score = search_->GetDrawScore(true);
   
-  float even_draw_score = search_->GetDrawScore(false);
-  float odd_draw_score = search_->GetDrawScore(true);
+  // a reasonable value for threshold_for_drawish is 0.15, max value
+  // is 1.0 which is a no-op.
+  
+  float threshold_for_drawish = search_->GetDrawScore(false);
+  // a reasonable value for threshold_for_drawish is 0.25, max value is 0.5
+  float draw_score_change = search_->GetDrawScore(true);
   if(!is_root_node){
     float root_q=search_->root_node_->GetQ(0.0);
-    if(root_q < -0.15){
-      // Aim for draw
-      even_draw_score = 0.75;
+    if(root_q < -1.0 * threshold_for_drawish){
+      // Aim for a win, reduce the score for draw
+      // even_draw_score = 0.25;
+      even_draw_score = 0.5 - draw_score_change;
       }
-    if(root_q > 0.15){
-      // Aim for a win
-      even_draw_score = 0.25;
+    if(root_q > threshold_for_drawish){
+      // Aim for draw, increase the score for draw
+      // even_draw_score = 0.75;
+      even_draw_score = 0.5 + draw_score_change;
     }
   }
 
