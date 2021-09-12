@@ -500,6 +500,18 @@ void Search::SendMovesStats() const REQUIRES(counters_mutex_) {
       }
     }
   }
+  float root_q=root_node_->GetQ(0.0);
+    if(root_q < -0.15){
+      // Aim for draw
+      LOGFILE << "Looking bad, going for a draw" << root_q;
+      }
+    if(root_q < 0.15){
+      // Aim for a win
+      LOGFILE << "Looking good, going for a win" << root_q;
+    }
+    if((root_q >= -0.15) & (root_q <= 0.15)){
+      LOGFILE << "Looking even, not setting draw score dynamically" << root_q;      
+    }
 }
 
 NNCacheLock Search::GetCachedNNEval(const Node* node) const {
@@ -1587,12 +1599,10 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
     if(root_q < -0.15){
       // Aim for draw
       even_draw_score = 0.75;
-      LOGFILE << "Looking bad, going for a draw" << even_draw_score;
       }
     if(root_q < 0.15){
       // Aim for a win
       even_draw_score = 0.25;
-      LOGFILE << "Looking good, going for a win" << even_draw_score;      
     }
   }
 
