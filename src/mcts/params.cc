@@ -390,8 +390,8 @@ void SearchParams::Populate(OptionsParser* options) {
   options->Add<FloatOption>(kMovesLeftQuadraticFactorId, -1.0f, 1.0f) = 0.0f;
   options->Add<BoolOption>(kDisplayCacheUsageId) = false;
   options->Add<IntOption>(kMaxConcurrentSearchersId, 0, 128) = 1;
-  options->Add<FloatOption>(kWDLSearchThresholdId, 0, 100) = 100;
-  options->Add<FloatOption>(kWDLSearchDrawScoreId, 0, 50) = 0;
+  options->Add<FloatOption>(kWDLSearchThresholdId, 0.0, 1.0) = 1.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreId, 0.0, 1.0) = 0.0;
   options->Add<IntOption>(kDrawScoreSidetomoveId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreOpponentId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreWhiteId, -100, 100) = 0;
