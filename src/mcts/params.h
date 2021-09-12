@@ -104,6 +104,8 @@ class SearchParams {
   }
   bool GetDisplayCacheUsage() const { return kDisplayCacheUsage; }
   int GetMaxConcurrentSearchers() const { return kMaxConcurrentSearchers; }
+  float GetWDLSearchThreshold() const { return kWDLSearchThreshold; }
+  float GetWDLSearchDrawScore() const { return kWDLSearchDrawScore; }
   float GetSidetomoveDrawScore() const { return kDrawScoreSidetomove; }
   float GetOpponentDrawScore() const { return kDrawScoreOpponent; }
   float GetWhiteDrawDelta() const { return kDrawScoreWhite; }
@@ -185,6 +187,8 @@ class SearchParams {
   static const OptionId kMovesLeftSlopeId;
   static const OptionId kDisplayCacheUsageId;
   static const OptionId kMaxConcurrentSearchersId;
+  static const OptionId kWDLSearchThresholdId;
+  static const OptionId kWDLSearchDrawScoreId;
   static const OptionId kDrawScoreSidetomoveId;
   static const OptionId kDrawScoreOpponentId;
   static const OptionId kDrawScoreWhiteId;
@@ -242,6 +246,8 @@ class SearchParams {
   const float kMovesLeftQuadraticFactor;
   const bool kDisplayCacheUsage;
   const int kMaxConcurrentSearchers;
+  const float kWDLSearchThreshold;
+  const float kWDLSearchDrawScore;
   const float kDrawScoreSidetomove;
   const float kDrawScoreOpponent;
   const float kDrawScoreWhite;

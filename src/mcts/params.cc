@@ -257,6 +257,13 @@ const OptionId SearchParams::kMaxConcurrentSearchersId{
     "max-concurrent-searchers", "MaxConcurrentSearchers",
     "If not 0, at most this many search workers can be gathering minibatches "
     "at once."};
+const OptionId SearchParams::kWDLSearchThresholdId{
+    "wdl-search-threshold", "WDLSearchThreshold",
+    "Absolute value of Q that triggers changes in drawscore for the player "
+    "making the move."};
+const OptionId SearchParams::kWDLSearchDrawScoreId{
+    "draw-score-opponent", "WDLSearchDrawScore",
+    "Score of a drawn game, as seen by the opponent."};
 const OptionId SearchParams::kDrawScoreSidetomoveId{
     "draw-score-sidetomove", "DrawScoreSideToMove",
     "Score of a drawn game, as seen by a player making the move."};
@@ -383,6 +390,8 @@ void SearchParams::Populate(OptionsParser* options) {
   options->Add<FloatOption>(kMovesLeftQuadraticFactorId, -1.0f, 1.0f) = 0.0f;
   options->Add<BoolOption>(kDisplayCacheUsageId) = false;
   options->Add<IntOption>(kMaxConcurrentSearchersId, 0, 128) = 1;
+  options->Add<FloatOption>(kWDLSearchThresholdId, 0, 100) = 100;
+  options->Add<FloatOption>(kWDLSearchDrawScoreId, 0, 50) = 0;
   options->Add<IntOption>(kDrawScoreSidetomoveId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreOpponentId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreWhiteId, -100, 100) = 0;
@@ -463,6 +472,8 @@ SearchParams::SearchParams(const OptionsDict& options)
           options.Get<float>(kMovesLeftQuadraticFactorId)),
       kDisplayCacheUsage(options.Get<bool>(kDisplayCacheUsageId)),
       kMaxConcurrentSearchers(options.Get<int>(kMaxConcurrentSearchersId)),
+      kWDLSearchThreshold(options.Get<float>(kWDLSearchThresholdId)),
+      kWDLSearchDrawScore(options.Get<float>(kWDLSearchDrawScoreId)),
       kDrawScoreSidetomove{options.Get<int>(kDrawScoreSidetomoveId) / 100.0f},
       kDrawScoreOpponent{options.Get<int>(kDrawScoreOpponentId) / 100.0f},
       kDrawScoreWhite{options.Get<int>(kDrawScoreWhiteId) / 100.0f},
