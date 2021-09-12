@@ -506,12 +506,12 @@ void Search::SendMovesStats() const REQUIRES(counters_mutex_) {
       // Aim for a win
       LOGFILE << "Looking good, as root_q is " << root_q << " which is less than " << -1.0 * params_.GetWDLSearchThreshold() << " going for a win and setting drawscore the side to move at: " << GetDrawScore(false) - params_.GetWDLSearchDrawScore();
     }
-    if(root_q > params_.GetWDLSearchDrawScore()){
+    if(root_q > params_.GetWDLSearchThreshold()){
       // Aim for draw
       LOGFILE << "Looking bad, as root_q is " << root_q << " which is more than " << params_.GetWDLSearchThreshold() << " going for a draw and setting drawscore the side to move at: " << GetDrawScore(false) + params_.GetWDLSearchDrawScore();
     }
-    if((root_q >= -1.0 * params_.GetWDLSearchDrawScore()) & (root_q <= params_.GetWDLSearchDrawScore())){
-      LOGFILE << "Looking even, as root_q is " << root_q << " which is more than " << -1.0 * params_.GetWDLSearchThreshold() << " and less than " << params_.GetWDLSearchThreshold() <<  " not setting draw score dynamically";
+    if((root_q >= -1.0 * params_.GetWDLSearchThreshold()) && (root_q <= params_.GetWDLSearchThreshold())){
+      LOGFILE << "Looking even, as root_q is " << root_q << " which is more than or equal to " << -1.0 * params_.GetWDLSearchThreshold() << " and less than or equal to " << params_.GetWDLSearchThreshold() <<  " not setting draw score dynamically";
     }
   }
 }
