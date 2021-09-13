@@ -1608,10 +1608,10 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
     // 1.0, 0.0 is a no-op.
     if(!is_root_node){
       float root_q=search_->root_node_->GetQ(0.0);
-      if(root_q < -1.0 * threshold_for_drawish){
-	// Aim for a win, reduce the score for draw
-	even_draw_score = search_->GetDrawScore(false) - draw_score_change;
-      }
+      // if(root_q < -1.0 * threshold_for_drawish){
+      // 	// Aim for a win, reduce the score for draw
+      // 	even_draw_score = search_->GetDrawScore(false) - draw_score_change * 0.1;
+      // }
       if(root_q > threshold_for_drawish){
 	// Aim for draw, increase the score for draw
 	even_draw_score = search_->GetDrawScore(false) + draw_score_change;
