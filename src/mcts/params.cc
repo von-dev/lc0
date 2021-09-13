@@ -261,9 +261,14 @@ const OptionId SearchParams::kWDLSearchThresholdId{
     "wdl-search-threshold", "WDLSearchThreshold",
     "Absolute value of Q that triggers changes in drawscore for the player "
     "making the move."};
-const OptionId SearchParams::kWDLSearchDrawScoreId{
-    "draw-score-opponent", "WDLSearchDrawScore",
-    "Score of a drawn game, as seen by the opponent."};
+const OptionId SearchParams::kWDLSearchDrawScoreLosingId{
+    "draw-score-losing", "WDLSearchDrawScoreLosing",
+    "Score of a drawn game, as seen by a player making the move when the "
+    "eval shows Leela is at risk of losing the game."};
+const OptionId SearchParams::kWDLSearchDrawScoreWinningId{
+    "draw-score-winning", "WDLSearchDrawScoreWinning",
+    "Score of a drawn game, as seen by a player making the move when eval "
+     "shows Leela has the upper hand."};
 const OptionId SearchParams::kDrawScoreSidetomoveId{
     "draw-score-sidetomove", "DrawScoreSideToMove",
     "Score of a drawn game, as seen by a player making the move."};
@@ -391,7 +396,8 @@ void SearchParams::Populate(OptionsParser* options) {
   options->Add<BoolOption>(kDisplayCacheUsageId) = false;
   options->Add<IntOption>(kMaxConcurrentSearchersId, 0, 128) = 1;
   options->Add<FloatOption>(kWDLSearchThresholdId, 0.0, 1.0) = 1.0;
-  options->Add<FloatOption>(kWDLSearchDrawScoreId, 0.0, 1.0) = 0.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreLosingId, 0.0, 1.0) = 0.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreWinningId, 0.0, 0.1) = 0.0;
   options->Add<IntOption>(kDrawScoreSidetomoveId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreOpponentId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreWhiteId, -100, 100) = 0;
@@ -473,7 +479,8 @@ SearchParams::SearchParams(const OptionsDict& options)
       kDisplayCacheUsage(options.Get<bool>(kDisplayCacheUsageId)),
       kMaxConcurrentSearchers(options.Get<int>(kMaxConcurrentSearchersId)),
       kWDLSearchThreshold(options.Get<float>(kWDLSearchThresholdId)),
-      kWDLSearchDrawScore(options.Get<float>(kWDLSearchDrawScoreId)),
+      kWDLSearchDrawScoreLosing(options.Get<float>(kWDLSearchDrawScoreLosingId)),
+      kWDLSearchDrawScoreWinning(options.Get<float>(kWDLSearchDrawScoreWinningId)),
       kDrawScoreSidetomove{options.Get<int>(kDrawScoreSidetomoveId) / 100.0f},
       kDrawScoreOpponent{options.Get<int>(kDrawScoreOpponentId) / 100.0f},
       kDrawScoreWhite{options.Get<int>(kDrawScoreWhiteId) / 100.0f},

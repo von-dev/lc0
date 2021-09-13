@@ -500,20 +500,6 @@ void Search::SendMovesStats() const REQUIRES(counters_mutex_) {
       }
     }
   }
-  float root_q=root_node_->GetQ(0.0);
-  if(params_.GetWDLSearchThreshold() < 1.0){
-    if(root_q < -1.0 * params_.GetWDLSearchThreshold()){
-      // Aim for a win
-      LOGFILE << "Looking good, as root_q is " << root_q << " which is less than " << -1.0 * params_.GetWDLSearchThreshold() << " going for a win and setting drawscore the side to move at: " << GetDrawScore(false) - params_.GetWDLSearchDrawScore();
-    }
-    if(root_q > params_.GetWDLSearchThreshold()){
-      // Aim for draw
-      LOGFILE << "Looking bad, as root_q is " << root_q << " which is more than " << params_.GetWDLSearchThreshold() << " going for a draw and setting drawscore the side to move at: " << GetDrawScore(false) + params_.GetWDLSearchDrawScore();
-    }
-    if((root_q >= -1.0 * params_.GetWDLSearchThreshold()) && (root_q <= params_.GetWDLSearchThreshold())){
-      LOGFILE << "Looking even, as root_q is " << root_q << " which is more than or equal to " << -1.0 * params_.GetWDLSearchThreshold() << " and less than or equal to " << params_.GetWDLSearchThreshold() <<  " not setting draw score dynamically";
-    }
-  }
 }
 
 NNCacheLock Search::GetCachedNNEval(const Node* node) const {
@@ -1594,27 +1580,20 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 
   bool is_root_node = node == search_->root_node_;
 
-  // While testing, use the two draw score parameters in a custom way
   float even_draw_score = 0.0f;
   float odd_draw_score = 0.0f;
 
   if(params_.GetWDLSearchThreshold() < 1.0){
     float threshold_for_drawish = params_.GetWDLSearchThreshold();
-    // a reasonable value for threshold_for_drawish is 0.15, max value
-    // is 1.0, which is a no-op
-    float draw_score_change = params_.GetWDLSearchDrawScore();
-    // a reasonable value for draw_score_change is 0.05 (if the static
-    // value of DrawScoreSidetomove is at the default 0), max value is
-    // 1.0, 0.0 is a no-op.
     if(!is_root_node){
       float root_q=search_->root_node_->GetQ(0.0);
-      // if(root_q < -1.0 * threshold_for_drawish){
-      // 	// Aim for a win, reduce the score for draw
-      // 	even_draw_score = search_->GetDrawScore(false) - draw_score_change * 0.1;
-      // }
+      if(root_q < -1.0 * threshold_for_drawish){
+      	// Aim for a win, reduce the score for draw.
+      	even_draw_score = search_->GetDrawScore(false) - params_.GetWDLSearchDrawScoreWinning();
+      }
       if(root_q > threshold_for_drawish){
-	// Aim for draw, increase the score for draw
-	even_draw_score = search_->GetDrawScore(false) + draw_score_change;
+      	// Aim for draw, increase the score for draw
+      	even_draw_score = search_->GetDrawScore(false) + params_.GetWDLSearchDrawScoreLosing();
       }
     }
   }
