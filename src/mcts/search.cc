@@ -1580,7 +1580,8 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 
   bool is_root_node = node == search_->root_node_;
 
-  // asymmetric draw scores for WDL search START
+  const float odd_draw_score = search_->GetDrawScore(true);
+  // asymmetric dynamic draw scores for WDL search START
   float even_draw_score = search_->GetDrawScore(false);
   float threshold_for_drawish = params_.GetWDLSearchThreshold();
 
