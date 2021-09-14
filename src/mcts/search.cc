@@ -1580,23 +1580,24 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 
   bool is_root_node = node == search_->root_node_;
 
-  float even_draw_score = 0.0f;
-  float odd_draw_score = 0.0f;
+  // asymmetric draw scores for WDL search START
+  float even_draw_score = search_->GetDrawScore(false);
+  float threshold_for_drawish = params_.GetWDLSearchThreshold();
 
-  if(params_.GetWDLSearchThreshold() < 1.0){
-    float threshold_for_drawish = params_.GetWDLSearchThreshold();
+  if(threshold_for_drawish < 1.0){
     if(!is_root_node){
       float root_q=search_->root_node_->GetQ(0.0);
-      if(root_q < -1.0 * threshold_for_drawish){
+      if(root_q < -threshold_for_drawish){
       	// Aim for a win, reduce the score for draw.
-      	even_draw_score = search_->GetDrawScore(false) - params_.GetWDLSearchDrawScoreWinning();
+	even_draw_score -= params_.GetWDLSearchDrawScoreWinning();
       }
       if(root_q > threshold_for_drawish){
       	// Aim for draw, increase the score for draw
-      	even_draw_score = search_->GetDrawScore(false) + params_.GetWDLSearchDrawScoreLosing();
+	even_draw_score += params_.GetWDLSearchDrawScoreLosing();
       }
     }
   }
+  // asymmetric draw scores for WDL search STOP
 
   const auto& root_move_filter = search_->root_move_filter_;
   auto m_evaluator = moves_left_support_ ? MEvaluator(params_) : MEvaluator();
