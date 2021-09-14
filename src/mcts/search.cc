@@ -500,25 +500,26 @@ void Search::SendMovesStats() const REQUIRES(counters_mutex_) {
       }
     }
   }
+  // Debug WDL search START
   float root_q=root_node_->GetQ(0.0);
   float even_draw_score = GetDrawScore(false);
-  float threshold_for_drawish = params_.GetWDLSearchThreshold();
-  if(threshold_for_drawish < 1.0){
-    if(root_q < -threshold_for_drawish){
-      // Aim for a win
-      even_draw_score -= params_.GetWDLSearchDrawScoreWinning();
-      LOGFILE << "Looking good, as root_q is " << root_q << " which is less than " << -threshold_for_drawish << " going for a win and setting drawscore the side to move at: " << even_draw_score;
-    }
-      if(root_q > threshold_for_drawish){
-      // Aim for draw
-      even_draw_score += params_.GetWDLSearchDrawScoreLosing();	
-      LOGFILE << "Looking bad, as root_q is " << root_q << " which is more than " << -threshold_for_drawish << " going for a draw and setting drawscore the side to move at: " << even_draw_score;
-    }
-    // if((root_q >= -1.0 * params_.GetWDLSearchThreshold()) && (root_q <= params_.GetWDLSearchThreshold())){      
-    if((root_q >= -threshold_for_drawish) && (root_q <= threshold_for_drawish)){
-      LOGFILE << "Looking even, as root_q is " << root_q << " which is more than or equal to " << -threshold_for_drawish << " and less than or equal to " << threshold_for_drawish <<  " not setting draw score dynamically";
-    }
+  float threshold_for_losing = params_.GetWDLSearchThresholdLosing();
+  float threshold_for_winning = params_.GetWDLSearchThresholdWinning();  
+  if(root_q < -threshold_for_winning){
+    // Aim for a win
+    even_draw_score -= params_.GetWDLSearchDrawScoreWinning();
+    LOGFILE << "Looking good, as root_q is " << root_q << " which is less than " << -threshold_for_winning << " going for a win and setting drawscore the side to move at: " << even_draw_score;
   }
+  if(root_q > threshold_for_losing){
+    // Aim for draw
+    even_draw_score += params_.GetWDLSearchDrawScoreLosing();	
+    LOGFILE << "Looking bad, as root_q is " << root_q << " which is more than " << -threshold_for_losing << " going for a draw and setting drawscore the side to move at: " << even_draw_score;
+  }
+  // if((root_q >= -1.0 * params_.GetWDLSearchThreshold()) && (root_q <= params_.GetWDLSearchThreshold())){      
+  if((root_q >= -threshold_for_winning) && (root_q <= threshold_for_losing)){
+    LOGFILE << "Looking even, as root_q is " << root_q << " which is more than or equal to " << -threshold_for_winning << " and less than or equal to " << threshold_for_losing <<  " not setting draw score dynamically";
+  }
+  // Debug WDL search STOP  
 }
 
 NNCacheLock Search::GetCachedNNEval(const Node* node) const {
@@ -1602,19 +1603,15 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
   const float odd_draw_score = search_->GetDrawScore(true);
   // asymmetric dynamic draw scores for WDL search START
   float even_draw_score = search_->GetDrawScore(false);
-  float threshold_for_drawish = params_.GetWDLSearchThreshold();
-
-  if(threshold_for_drawish < 1.0){
-    if(!is_root_node){
-      float root_q=search_->root_node_->GetQ(0.0);
-      if(root_q < -threshold_for_drawish){
-      	// Aim for a win, reduce the score for draw.
-	even_draw_score -= params_.GetWDLSearchDrawScoreWinning();
-      }
-      if(root_q > threshold_for_drawish){
-      	// Aim for draw, increase the score for draw
-	even_draw_score += params_.GetWDLSearchDrawScoreLosing();
-      }
+  if(!is_root_node){
+    float root_q=search_->root_node_->GetQ(0.0);
+    if(root_q < -params_.GetWDLSearchThresholdWinning()){
+      // Aim for a win, reduce the score for draw.
+      even_draw_score -= params_.GetWDLSearchDrawScoreWinning();
+    }
+    if(root_q > params_.GetWDLSearchThresholdLosing()){
+      // Aim for draw, increase the score for draw
+      even_draw_score += params_.GetWDLSearchDrawScoreLosing();
     }
   }
   // asymmetric draw scores for WDL search STOP

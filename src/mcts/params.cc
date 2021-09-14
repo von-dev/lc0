@@ -257,14 +257,18 @@ const OptionId SearchParams::kMaxConcurrentSearchersId{
     "max-concurrent-searchers", "MaxConcurrentSearchers",
     "If not 0, at most this many search workers can be gathering minibatches "
     "at once."};
-const OptionId SearchParams::kWDLSearchThresholdId{
-    "wdl-search-threshold", "WDLSearchThreshold",
+const OptionId SearchParams::kWDLSearchThresholdLosingId{
+    "wdl-search-threshold-losing", "WDLSearchThresholdLosing",
     "Absolute value of Q that triggers changes in drawscore for the player "
-    "making the move."};
+    "making the move that will increase the likelihood of a draw."};
 const OptionId SearchParams::kWDLSearchDrawScoreLosingId{
     "draw-score-losing", "WDLSearchDrawScoreLosing",
     "Score of a drawn game, as seen by a player making the move when the "
     "eval shows Leela is at risk of losing the game."};
+const OptionId SearchParams::kWDLSearchThresholdWinningId{
+    "wdl-search-threshold-winning", "WDLSearchThresholdWinning",
+    "Absolute value of Q that triggers changes in drawscore for the player "
+    "making the move that will decrease the likelihood of a draw."};
 const OptionId SearchParams::kWDLSearchDrawScoreWinningId{
     "draw-score-winning", "WDLSearchDrawScoreWinning",
     "Score of a drawn game, as seen by a player making the move when eval "
@@ -395,9 +399,10 @@ void SearchParams::Populate(OptionsParser* options) {
   options->Add<FloatOption>(kMovesLeftQuadraticFactorId, -1.0f, 1.0f) = 0.0f;
   options->Add<BoolOption>(kDisplayCacheUsageId) = false;
   options->Add<IntOption>(kMaxConcurrentSearchersId, 0, 128) = 1;
-  options->Add<FloatOption>(kWDLSearchThresholdId, 0.0, 1.0) = 1.0;
-  options->Add<FloatOption>(kWDLSearchDrawScoreLosingId, 0.0, 1.0) = 0.0;
-  options->Add<FloatOption>(kWDLSearchDrawScoreWinningId, 0.0, 0.1) = 0.0;
+  options->Add<FloatOption>(kWDLSearchThresholdLosingId, 0.0, 1.0) = 1.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreLosingId, -1.0, 1.0) = 0.0;
+  options->Add<FloatOption>(kWDLSearchThresholdWinningId, 0.0, 1.0) = 1.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreWinningId, -1.0, 0.1) = 0.0;
   options->Add<IntOption>(kDrawScoreSidetomoveId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreOpponentId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreWhiteId, -100, 100) = 0;
@@ -478,8 +483,9 @@ SearchParams::SearchParams(const OptionsDict& options)
           options.Get<float>(kMovesLeftQuadraticFactorId)),
       kDisplayCacheUsage(options.Get<bool>(kDisplayCacheUsageId)),
       kMaxConcurrentSearchers(options.Get<int>(kMaxConcurrentSearchersId)),
-      kWDLSearchThreshold(options.Get<float>(kWDLSearchThresholdId)),
+      kWDLSearchThresholdLosing(options.Get<float>(kWDLSearchThresholdLosingId)),
       kWDLSearchDrawScoreLosing(options.Get<float>(kWDLSearchDrawScoreLosingId)),
+      kWDLSearchThresholdWinning(options.Get<float>(kWDLSearchThresholdWinningId)),
       kWDLSearchDrawScoreWinning(options.Get<float>(kWDLSearchDrawScoreWinningId)),
       kDrawScoreSidetomove{options.Get<int>(kDrawScoreSidetomoveId) / 100.0f},
       kDrawScoreOpponent{options.Get<int>(kDrawScoreOpponentId) / 100.0f},
