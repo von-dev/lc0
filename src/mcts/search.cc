@@ -500,6 +500,25 @@ void Search::SendMovesStats() const REQUIRES(counters_mutex_) {
       }
     }
   }
+  float root_q=root_node_->GetQ(0.0);
+  float even_draw_score = GetDrawScore(false);
+  float threshold_for_drawish = params_.GetWDLSearchThreshold();
+  if(threshold_for_drawish < 1.0){
+    if(root_q < -threshold_for_drawish){
+      // Aim for a win
+      even_draw_score -= params_.GetWDLSearchDrawScoreWinning();
+      LOGFILE << "Looking good, as root_q is " << root_q << " which is less than " << -threshold_for_drawish << " going for a win and setting drawscore the side to move at: " << even_draw_score;
+    }
+      if(root_q > threshold_for_drawish){
+      // Aim for draw
+      even_draw_score += params_.GetWDLSearchDrawScoreLosing();	
+      LOGFILE << "Looking bad, as root_q is " << root_q << " which is more than " << -threshold_for_drawish << " going for a draw and setting drawscore the side to move at: " << even_draw_score;
+    }
+    // if((root_q >= -1.0 * params_.GetWDLSearchThreshold()) && (root_q <= params_.GetWDLSearchThreshold())){      
+    if((root_q >= -threshold_for_drawish) && (root_q <= threshold_for_drawish)){
+      LOGFILE << "Looking even, as root_q is " << root_q << " which is more than or equal to " << -threshold_for_drawish << " and less than or equal to " << threshold_for_drawish <<  " not setting draw score dynamically";
+    }
+  }
 }
 
 NNCacheLock Search::GetCachedNNEval(const Node* node) const {
