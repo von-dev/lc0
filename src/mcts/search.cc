@@ -1585,9 +1585,11 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
   float even_draw_score = search_->GetDrawScore(false);
   if(!is_root_node){
     float root_q=search_->root_node_->GetQ(0.0);
+
     // make sure these two do not counteract each other.
     assert(! ((root_q < -params_.GetWDLSearchThresholdWinning()) &&
 	      root_q > params_.GetWDLSearchThresholdLosing()));
+
     if(root_q < -params_.GetWDLSearchThresholdWinning()){
       // Aim for a win, reduce the score for draw.
       // root_q is negative, which is why we _add_

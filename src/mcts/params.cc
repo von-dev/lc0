@@ -400,7 +400,7 @@ void SearchParams::Populate(OptionsParser* options) {
   options->Add<BoolOption>(kDisplayCacheUsageId) = false;
   options->Add<IntOption>(kMaxConcurrentSearchersId, 0, 128) = 1;
   options->Add<FloatOption>(kWDLSearchThresholdLosingId, 0.0, 1.0) = 1.0;
-  options->Add<FloatOption>(kWDLSearchDrawScoreLosingId, -1.0, 1.0) = 0.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreLosingId, -10.0, 10.0) = 0.0;
   options->Add<FloatOption>(kWDLSearchThresholdWinningId, 0.0, 1.0) = 1.0;
   options->Add<FloatOption>(kWDLSearchDrawScoreWinningId, -1.0, 0.1) = 0.0;
   options->Add<IntOption>(kDrawScoreSidetomoveId, -100, 100) = 0;
