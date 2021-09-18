@@ -105,9 +105,12 @@ class SearchParams {
   bool GetDisplayCacheUsage() const { return kDisplayCacheUsage; }
   int GetMaxConcurrentSearchers() const { return kMaxConcurrentSearchers; }
   float GetWDLSearchThresholdLosing() const { return kWDLSearchThresholdLosing; }
-  float GetWDLSearchDrawScoreLosing() const { return kWDLSearchDrawScoreLosing; }
+  float GetWDLSearchDrawScoreLosingIntercept() const { return kWDLSearchDrawScoreLosingIntercept; }
+  float GetWDLSearchDrawScoreLosingSlope() const { return kWDLSearchDrawScoreLosingSlope; }  
   float GetWDLSearchThresholdWinning() const { return kWDLSearchThresholdWinning; }
-  float GetWDLSearchDrawScoreWinning() const { return kWDLSearchDrawScoreWinning; }
+  float GetWDLSearchDrawScoreWinningMax() const { return kWDLSearchDrawScoreWinningMax; }  
+  float GetWDLSearchDrawScoreWinningIntercept() const { return kWDLSearchDrawScoreWinningIntercept; }
+  float GetWDLSearchDrawScoreWinningSlope() const { return kWDLSearchDrawScoreWinningSlope; }  
   float GetSidetomoveDrawScore() const { return kDrawScoreSidetomove; }
   float GetOpponentDrawScore() const { return kDrawScoreOpponent; }
   float GetWhiteDrawDelta() const { return kDrawScoreWhite; }
@@ -189,9 +192,12 @@ class SearchParams {
   static const OptionId kDisplayCacheUsageId;
   static const OptionId kMaxConcurrentSearchersId;
   static const OptionId kWDLSearchThresholdLosingId;
-  static const OptionId kWDLSearchDrawScoreLosingId;
+  static const OptionId kWDLSearchDrawScoreLosingInterceptId;
+  static const OptionId kWDLSearchDrawScoreLosingSlopeId;  
   static const OptionId kWDLSearchThresholdWinningId;
-  static const OptionId kWDLSearchDrawScoreWinningId;
+  static const OptionId kWDLSearchDrawScoreWinningMaxId;  
+  static const OptionId kWDLSearchDrawScoreWinningInterceptId;
+  static const OptionId kWDLSearchDrawScoreWinningSlopeId;
   static const OptionId kDrawScoreSidetomoveId;
   static const OptionId kDrawScoreOpponentId;
   static const OptionId kDrawScoreWhiteId;
@@ -249,9 +255,12 @@ class SearchParams {
   const bool kDisplayCacheUsage;
   const int kMaxConcurrentSearchers;
   const float kWDLSearchThresholdLosing;
-  const float kWDLSearchDrawScoreLosing;
+  const float kWDLSearchDrawScoreLosingIntercept;
+  const float kWDLSearchDrawScoreLosingSlope;
   const float kWDLSearchThresholdWinning;
-  const float kWDLSearchDrawScoreWinning;
+  const float kWDLSearchDrawScoreWinningMax;
+  const float kWDLSearchDrawScoreWinningIntercept;
+  const float kWDLSearchDrawScoreWinningSlope;
   const float kDrawScoreSidetomove;
   const float kDrawScoreOpponent;
   const float kDrawScoreWhite;

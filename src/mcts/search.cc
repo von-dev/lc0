@@ -1521,17 +1521,19 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
       // expression to be result to be 0 when root_q is
       // -params_.GetWDLSearchThresholdWinning().
       
-      even_draw_score -= std::max(0.025f, (root_q +
-	    params_.GetWDLSearchThresholdWinning()) *
-	    params_.GetWDLSearchDrawScoreWinning());
+      even_draw_score -= std::max(params_.GetWDLSearchDrawScoreWinningMax(),
+	   params_.GetWDLSearchDrawScoreWinningIntercept() +
+	  (root_q + params_.GetWDLSearchThresholdWinning()) *
+		  params_.GetWDLSearchDrawScoreWinningSlope());
     }
     if(root_q > params_.GetWDLSearchThresholdLosing()){
       // Aim for draw, increase the score for draw.
       // root_q is positive, which why we _subtract_
       // the threshold here.
-      even_draw_score += std::max(1.0f, (root_q -
-	    params_.GetWDLSearchThresholdLosing()) *
-	    params_.GetWDLSearchDrawScoreLosing());
+      even_draw_score += std::max(1.0f,
+	    params_.GetWDLSearchDrawScoreLosingIntercept() +				  
+	  (root_q - params_.GetWDLSearchThresholdLosing()) *
+	    params_.GetWDLSearchDrawScoreLosingSlope());
     }
   }
   // asymmetric draw scores for WDL search STOP

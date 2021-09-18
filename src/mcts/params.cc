@@ -261,17 +261,30 @@ const OptionId SearchParams::kWDLSearchThresholdLosingId{
     "wdl-search-threshold-losing", "WDLSearchThresholdLosing",
     "Absolute value of Q that triggers changes in drawscore for the player "
     "making the move that will increase the likelihood of a draw."};
-const OptionId SearchParams::kWDLSearchDrawScoreLosingId{
-    "draw-score-losing", "WDLSearchDrawScoreLosing",
-    "Score of a drawn game, as seen by a player making the move when the "
+const OptionId SearchParams::kWDLSearchDrawScoreLosingInterceptId{
+    "draw-score-losing-intercept", "WDLSearchDrawScoreLosingIntercept",
+    "amount to adjust the score of a drawn game, as seen by a player making "
+    "the move when the eval shows Leela is at risk of losing the game."};
+const OptionId SearchParams::kWDLSearchDrawScoreLosingSlopeId{
+    "draw-score-losing-slope", "WDLSearchDrawScoreLosingSlope",
+    "factor to multiply rootQ to get an amount which will be used to adjust "
+    "the score of a drawn game, as seen by a player making the move when the "
     "eval shows Leela is at risk of losing the game."};
 const OptionId SearchParams::kWDLSearchThresholdWinningId{
     "wdl-search-threshold-winning", "WDLSearchThresholdWinning",
     "Absolute value of Q that triggers changes in drawscore for the player "
     "making the move that will decrease the likelihood of a draw."};
-const OptionId SearchParams::kWDLSearchDrawScoreWinningId{
-    "draw-score-winning", "WDLSearchDrawScoreWinning",
-    "Score of a drawn game, as seen by a player making the move when eval "
+const OptionId SearchParams::kWDLSearchDrawScoreWinningMaxId{  
+    "draw-score-winning-max", "WDLSearchDrawScoreWinningMax",
+    "TODO update this Score of a drawn game, as seen by a player making the move when eval "
+     "shows Leela has the upper hand."};
+const OptionId SearchParams::kWDLSearchDrawScoreWinningInterceptId{  
+    "draw-score-winning-intercept", "WDLSearchDrawScoreWinningIntercept",
+    "TODO update this Score of a drawn game, as seen by a player making the move when eval "
+     "shows Leela has the upper hand."};
+const OptionId SearchParams::kWDLSearchDrawScoreWinningSlopeId{  
+    "draw-score-winning-slope", "WDLSearchDrawScoreWinningSlope",
+    "TODO update this Score of a drawn game, as seen by a player making the move when eval "
      "shows Leela has the upper hand."};
 const OptionId SearchParams::kDrawScoreSidetomoveId{
     "draw-score-sidetomove", "DrawScoreSideToMove",
@@ -399,9 +412,12 @@ void SearchParams::Populate(OptionsParser* options) {
   options->Add<BoolOption>(kDisplayCacheUsageId) = false;
   options->Add<IntOption>(kMaxConcurrentSearchersId, 0, 128) = 1;
   options->Add<FloatOption>(kWDLSearchThresholdLosingId, 0.0, 1.0) = 1.0;
-  options->Add<FloatOption>(kWDLSearchDrawScoreLosingId, -10.0, 10.0) = 0.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreLosingInterceptId, -1.0, 1.0) = 0.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreLosingSlopeId, -10.0, 10.0) = 0.0;  
   options->Add<FloatOption>(kWDLSearchThresholdWinningId, 0.0, 1.0) = 1.0;
-  options->Add<FloatOption>(kWDLSearchDrawScoreWinningId, -1.0, 0.1) = 0.0;
+  options->Add<FloatOption>(kWDLSearchDrawScoreWinningMaxId, -1.0, 1.0) = 0.0;    
+  options->Add<FloatOption>(kWDLSearchDrawScoreWinningInterceptId, -1.0, 1.0) = 0.0;  
+  options->Add<FloatOption>(kWDLSearchDrawScoreWinningSlopeId, -10.0, 0.1) = 0.0;
   options->Add<IntOption>(kDrawScoreSidetomoveId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreOpponentId, -100, 100) = 0;
   options->Add<IntOption>(kDrawScoreWhiteId, -100, 100) = 0;
@@ -482,9 +498,12 @@ SearchParams::SearchParams(const OptionsDict& options)
       kDisplayCacheUsage(options.Get<bool>(kDisplayCacheUsageId)),
       kMaxConcurrentSearchers(options.Get<int>(kMaxConcurrentSearchersId)),
       kWDLSearchThresholdLosing(options.Get<float>(kWDLSearchThresholdLosingId)),
-      kWDLSearchDrawScoreLosing(options.Get<float>(kWDLSearchDrawScoreLosingId)),
+      kWDLSearchDrawScoreLosingIntercept(options.Get<float>(kWDLSearchDrawScoreLosingInterceptId)),
+      kWDLSearchDrawScoreLosingSlope(options.Get<float>(kWDLSearchDrawScoreLosingSlopeId)),      
       kWDLSearchThresholdWinning(options.Get<float>(kWDLSearchThresholdWinningId)),
-      kWDLSearchDrawScoreWinning(options.Get<float>(kWDLSearchDrawScoreWinningId)),
+      kWDLSearchDrawScoreWinningMax(options.Get<float>(kWDLSearchDrawScoreWinningMaxId)),      
+      kWDLSearchDrawScoreWinningIntercept(options.Get<float>(kWDLSearchDrawScoreWinningInterceptId)),
+      kWDLSearchDrawScoreWinningSlope(options.Get<float>(kWDLSearchDrawScoreWinningSlopeId)),      
       kDrawScoreSidetomove{options.Get<int>(kDrawScoreSidetomoveId) / 100.0f},
       kDrawScoreOpponent{options.Get<int>(kDrawScoreOpponentId) / 100.0f},
       kDrawScoreWhite{options.Get<int>(kDrawScoreWhiteId) / 100.0f},
