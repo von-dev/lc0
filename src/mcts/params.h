@@ -108,7 +108,6 @@ class SearchParams {
   float GetWDLSearchDrawScoreLosingIntercept() const { return kWDLSearchDrawScoreLosingIntercept; }
   float GetWDLSearchDrawScoreLosingSlope() const { return kWDLSearchDrawScoreLosingSlope; }  
   float GetWDLSearchThresholdWinning() const { return kWDLSearchThresholdWinning; }
-  float GetWDLSearchDrawScoreWinningMax() const { return kWDLSearchDrawScoreWinningMax; }  
   float GetWDLSearchDrawScoreWinningIntercept() const { return kWDLSearchDrawScoreWinningIntercept; }
   float GetWDLSearchDrawScoreWinningSlope() const { return kWDLSearchDrawScoreWinningSlope; }  
   float GetSidetomoveDrawScore() const { return kDrawScoreSidetomove; }
@@ -258,7 +257,6 @@ class SearchParams {
   const float kWDLSearchDrawScoreLosingIntercept;
   const float kWDLSearchDrawScoreLosingSlope;
   const float kWDLSearchThresholdWinning;
-  const float kWDLSearchDrawScoreWinningMax;
   const float kWDLSearchDrawScoreWinningIntercept;
   const float kWDLSearchDrawScoreWinningSlope;
   const float kDrawScoreSidetomove;

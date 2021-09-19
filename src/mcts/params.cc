@@ -274,10 +274,6 @@ const OptionId SearchParams::kWDLSearchThresholdWinningId{
     "wdl-search-threshold-winning", "WDLSearchThresholdWinning",
     "Absolute value of Q that triggers changes in drawscore for the player "
     "making the move that will decrease the likelihood of a draw."};
-const OptionId SearchParams::kWDLSearchDrawScoreWinningMaxId{  
-    "draw-score-winning-max", "WDLSearchDrawScoreWinningMax",
-    "TODO update this Score of a drawn game, as seen by a player making the move when eval "
-     "shows Leela has the upper hand."};
 const OptionId SearchParams::kWDLSearchDrawScoreWinningInterceptId{  
     "draw-score-winning-intercept", "WDLSearchDrawScoreWinningIntercept",
     "TODO update this Score of a drawn game, as seen by a player making the move when eval "
@@ -415,7 +411,6 @@ void SearchParams::Populate(OptionsParser* options) {
   options->Add<FloatOption>(kWDLSearchDrawScoreLosingInterceptId, -1.0, 1.0) = 0.0;
   options->Add<FloatOption>(kWDLSearchDrawScoreLosingSlopeId, -10.0, 10.0) = 0.0;  
   options->Add<FloatOption>(kWDLSearchThresholdWinningId, 0.0, 1.0) = 1.0;
-  options->Add<FloatOption>(kWDLSearchDrawScoreWinningMaxId, -1.0, 1.0) = 0.0;    
   options->Add<FloatOption>(kWDLSearchDrawScoreWinningInterceptId, -1.0, 1.0) = 0.0;  
   options->Add<FloatOption>(kWDLSearchDrawScoreWinningSlopeId, -10.0, 0.1) = 0.0;
   options->Add<IntOption>(kDrawScoreSidetomoveId, -100, 100) = 0;
@@ -501,7 +496,6 @@ SearchParams::SearchParams(const OptionsDict& options)
       kWDLSearchDrawScoreLosingIntercept(options.Get<float>(kWDLSearchDrawScoreLosingInterceptId)),
       kWDLSearchDrawScoreLosingSlope(options.Get<float>(kWDLSearchDrawScoreLosingSlopeId)),      
       kWDLSearchThresholdWinning(options.Get<float>(kWDLSearchThresholdWinningId)),
-      kWDLSearchDrawScoreWinningMax(options.Get<float>(kWDLSearchDrawScoreWinningMaxId)),      
       kWDLSearchDrawScoreWinningIntercept(options.Get<float>(kWDLSearchDrawScoreWinningInterceptId)),
       kWDLSearchDrawScoreWinningSlope(options.Get<float>(kWDLSearchDrawScoreWinningSlopeId)),      
       kDrawScoreSidetomove{options.Get<int>(kDrawScoreSidetomoveId) / 100.0f},

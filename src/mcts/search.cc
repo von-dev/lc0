@@ -1521,7 +1521,7 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
       // expression to be result to be 0 when root_q is
       // -params_.GetWDLSearchThresholdWinning().
       
-      even_draw_score -= std::max(params_.GetWDLSearchDrawScoreWinningMax(),
+      even_draw_score -= std::max(1.0f,
 	   params_.GetWDLSearchDrawScoreWinningIntercept() +
 	  (root_q + params_.GetWDLSearchThresholdWinning()) *
 		  params_.GetWDLSearchDrawScoreWinningSlope());
