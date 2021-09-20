@@ -1504,7 +1504,7 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 
   bool is_root_node = node == search_->root_node_;
 
-  const float odd_draw_score = search_->GetDrawScore(true);
+  float odd_draw_score = search_->GetDrawScore(true);
   // asymmetric dynamic draw scores for WDL search START
   float even_draw_score = search_->GetDrawScore(false);
   if(!is_root_node){
@@ -1525,6 +1525,13 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 	   params_.GetWDLSearchDrawScoreWinningIntercept() +
 	  (root_q + params_.GetWDLSearchThresholdWinning()) *
 		  params_.GetWDLSearchDrawScoreWinningSlope());
+
+      // Make the opponent look harder for a draw
+      odd_draw_score += std::max(1.0f,
+	    params_.GetWDLSearchDrawScoreLosingIntercept() +				  
+	  (root_q - params_.GetWDLSearchThresholdLosing()) *
+	    params_.GetWDLSearchDrawScoreLosingSlope());
+
     }
     if(root_q > params_.GetWDLSearchThresholdLosing()){
       // Aim for draw, increase the score for draw.
@@ -1534,6 +1541,13 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 	    params_.GetWDLSearchDrawScoreLosingIntercept() +				  
 	  (root_q - params_.GetWDLSearchThresholdLosing()) *
 	    params_.GetWDLSearchDrawScoreLosingSlope());
+
+      // Make the opponent look harder for a win
+      odd_draw_score -= std::max(1.0f,
+	   params_.GetWDLSearchDrawScoreWinningIntercept() +
+	  (root_q + params_.GetWDLSearchThresholdWinning()) *
+		  params_.GetWDLSearchDrawScoreWinningSlope());
+
     }
   }
   // asymmetric draw scores for WDL search STOP
