@@ -1526,13 +1526,13 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 	  (root_q + params_.GetWDLSearchThresholdWinning()) *
 		  params_.GetWDLSearchDrawScoreWinningSlope());
     }
-    if(root_q < -params_.GetWDLSearchThresholdLosing()){
-      // Make the opponent look harder for a draw
-      odd_draw_score += std::max(1.0f,
-	    params_.GetWDLSearchDrawScoreLosingIntercept() +				  
-	  (root_q + params_.GetWDLSearchThresholdLosing()) *
-	    params_.GetWDLSearchDrawScoreLosingSlope());
-    }
+    // if(root_q < -params_.GetWDLSearchThresholdLosing()){
+    //   // Make the opponent look harder for a draw
+    //   odd_draw_score += std::max(1.0f,
+    // 	    params_.GetWDLSearchDrawScoreLosingIntercept() +
+    // 	  (root_q + params_.GetWDLSearchThresholdLosing()) *
+    // 	    params_.GetWDLSearchDrawScoreLosingSlope());
+    // }
 
     // Case 2 The opponent has the upper hand (root Q is positive)
     if(root_q > params_.GetWDLSearchThresholdLosing()){
@@ -1545,13 +1545,13 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 	    params_.GetWDLSearchDrawScoreLosingSlope());
 
     }
-    if(root_q > params_.GetWDLSearchThresholdWinning()){
-      // Make the opponent look harder for a win
-      odd_draw_score -= std::max(1.0f,
-	   params_.GetWDLSearchDrawScoreWinningIntercept() +
-	  (root_q - params_.GetWDLSearchThresholdWinning()) *
-		  params_.GetWDLSearchDrawScoreWinningSlope());
-    }
+    // if(root_q > params_.GetWDLSearchThresholdWinning()){
+    //   // Make the opponent look harder for a win
+    //   odd_draw_score -= std::max(1.0f,
+    // 	   params_.GetWDLSearchDrawScoreWinningIntercept() +
+    // 	  (root_q - params_.GetWDLSearchThresholdWinning()) *
+    // 		  params_.GetWDLSearchDrawScoreWinningSlope());
+    // }
   }
   // asymmetric draw scores for WDL search STOP
 
