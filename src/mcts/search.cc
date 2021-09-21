@@ -1510,10 +1510,6 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
   if(!is_root_node){
     float root_q=search_->root_node_->GetQ(0.0);
 
-    // make sure these two do not counteract each other.
-    assert(! ((root_q < -params_.GetWDLSearchThresholdWinning()) &&
-	      root_q > params_.GetWDLSearchThresholdLosing()));
-
     // Case 1 The current player has the upper hand (root Q is negative)
     if(root_q < -params_.GetWDLSearchThresholdWinning()){
       // Aim for a win, reduce the score for draw.
