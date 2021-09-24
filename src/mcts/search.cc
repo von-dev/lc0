@@ -1522,6 +1522,10 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
 	  (root_q + params_.GetWDLSearchThresholdWinning()) *
 		  params_.GetWDLSearchDrawScoreWinningSlope());
     }
+    // changing the draw score for the opponent does not seem to be a
+    // good idea, but I haven't tested it so much. In particular, it
+    // might need a new threshold and new intercept and slope.
+
     // if(root_q < -params_.GetWDLSearchThresholdLosing()){
     //   // Make the opponent look harder for a draw
     //   odd_draw_score += std::max(1.0f,
@@ -1536,11 +1540,14 @@ void SearchWorker::PickNodesToExtendTask(Node* node, int base_depth,
       // root_q is positive, which why we _subtract_
       // the threshold here.
       even_draw_score += std::max(1.0f,
-	    params_.GetWDLSearchDrawScoreLosingIntercept() +				  
+	    params_.GetWDLSearchDrawScoreLosingIntercept() +
 	  (root_q - params_.GetWDLSearchThresholdLosing()) *
 	    params_.GetWDLSearchDrawScoreLosingSlope());
 
     }
+    // changing the draw score for the opponent does not seem to be a
+    // good idea, but I haven't tested it so much.
+    
     // if(root_q > params_.GetWDLSearchThresholdWinning()){
     //   // Make the opponent look harder for a win
     //   odd_draw_score -= std::max(1.0f,
