@@ -530,6 +530,18 @@ MoveList ChessBoard::GeneratePseudolegalMoves() const {
           }
         }
       }
+       // Moves sideways.
+      {
+        for (auto direction : {-1, 1}) {
+          const auto dst_row = source.row();
+          const auto dst_col = source.col() + direction;
+          if (dst_col < 0 || dst_col >= 8) continue;
+          const BoardSquare destination(dst_row, dst_col);
+          if (!our_pieces_.get(destination) && !their_pieces_.get(destination)) {
+            result.emplace_back(source, destination);
+          }
+        }
+      }
       // Captures.
       {
         for (auto direction : {-1, 1}) {
